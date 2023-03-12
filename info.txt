@@ -1,0 +1,13 @@
+pip install pyresparser
+pip install spacy
+pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz
+
+if getting access denied error then:
+    Make sure you are logged in to your Windows account as an administrator.
+    Close any applications that may be accessing the file in question.
+    Right-click on the file or folder and select "Properties".
+    In the "Properties" dialog box, click on the "Security" tab.
+    Click on the "Edit" button to change the permissions.
+    Select your user account from the list and check the "Full Control" checkbox.
+    Click "Apply" and then "OK" to save the changes.
+    Try to access or modify the file again.
