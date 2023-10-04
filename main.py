@@ -6,7 +6,8 @@ import pickle
 import pandas as pd
 import fitz
 from streamlit_tags import st_tags
-
+import nltk
+nltk.download('stopwords')
 roles = ['Advocate',
  'Arts',
  'Automation Testing',
