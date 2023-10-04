@@ -8,6 +8,9 @@ import pickle
 import pandas as pd
 import fitz
 from streamlit_tags import st_tags
+import random
+from courses import ds_course, web_course, android_course, ios_course, uiux_course, resume_videos, interview_videos
+from skills import skills_dict
 
 roles = ['Advocate',
  'Arts',
@@ -64,6 +67,20 @@ def extract_data(file_path):
     data = ResumeParser(file_path).get_extracted_data()
     return data
 
+def course_recommender(course_list):
+    st.subheader("**Courses & Certificates🎓 Recommendations**")
+    c = 0
+    rec_course = []
+    no_of_reco = st.slider('Choose Number of Course Recommendations:', 1, 10, 4)
+    random.shuffle(course_list)
+    for c_name, c_link in course_list:
+        c += 1
+        st.markdown(f"({c}) [{c_name}]({c_link})")
+        rec_course.append(c_name)
+        if c == no_of_reco:
+            break
+    return rec_course
+
 
 st.title('Resume Analyser')
 
@@ -103,29 +120,43 @@ if resume:
                             text='See our skills recommendation',
                             value=data['skills'], key='1')
 
+        doc = fitz.open('resume.pdf')
+        text = ""
+        for page in doc:
+            text+=page.get_text()
+        role = roles[model.predict(pd.Series([text]))[0]]
+        st.success(f"According to the analysis, you are interested in {role}")
+        recommended_keywords = st_tags(label='### Recommended skills for you.',
+                                            text='Recommended skills generated from System',
+                                            value=skills_dict[role], key='2')
+        st.markdown(
+            '''<h4 style='text-align: left; color: #1ed760;'>Adding this skills to resume will boost🚀 the chances of getting a Job💼</h4>''',
+            unsafe_allow_html=True)
+        rec_course = course_recommender(ds_course)
+            
         ##  recommendation
-        ds_keyword = ['tensorflow', 'keras', 'pytorch', 'machine learning', 'deep Learning', 'flask',
-                        'streamlit']
-        web_keyword = ['react', 'django', 'node jS', 'react js', 'php', 'laravel', 'magento', 'wordpress',
-                        'javascript', 'angular js', 'c#', 'flask']
-        android_keyword = ['android', 'android development', 'flutter', 'kotlin', 'xml', 'kivy']
-        ios_keyword = ['ios', 'ios development', 'swift', 'cocoa', 'cocoa touch', 'xcode']
-        uiux_keyword = ['ux', 'adobe xd', 'figma', 'zeplin', 'balsamiq', 'ui', 'prototyping', 'wireframes',
-                        'storyframes', 'adobe photoshop', 'photoshop', 'editing', 'adobe illustrator',
-                        'illustrator', 'adobe after effects', 'after effects', 'adobe premier pro',
-                        'premier pro', 'adobe indesign', 'indesign', 'wireframe', 'solid', 'grasp',
-                        'user research', 'user experience']
+        # ds_keyword = ['tensorflow', 'keras', 'pytorch', 'machine learning', 'deep Learning', 'flask',
+        #                 'streamlit']
+        # web_keyword = ['react', 'django', 'node jS', 'react js', 'php', 'laravel', 'magento', 'wordpress',
+        #                 'javascript', 'angular js', 'c#', 'flask']
+        # android_keyword = ['android', 'android development', 'flutter', 'kotlin', 'xml', 'kivy']
+        # ios_keyword = ['ios', 'ios development', 'swift', 'cocoa', 'cocoa touch', 'xcode']
+        # uiux_keyword = ['ux', 'adobe xd', 'figma', 'zeplin', 'balsamiq', 'ui', 'prototyping', 'wireframes',
+        #                 'storyframes', 'adobe photoshop', 'photoshop', 'editing', 'adobe illustrator',
+        #                 'illustrator', 'adobe after effects', 'after effects', 'adobe premier pro',
+        #                 'premier pro', 'adobe indesign', 'indesign', 'wireframe', 'solid', 'grasp',
+        #                 'user research', 'user experience']
         
-        recommended_skills = []
-        reco_field = ''
-        rec_course = ''
-        # ## Courses recommendation
+        # recommended_skills = []
+        # reco_field = ''
+        # rec_course = ''
+        ## Courses recommendation
         # for i in data['skills']:
         #     ## Data science recommendation
         #     if i.lower() in ds_keyword:
         #         print(i.lower())
         #         reco_field = 'Data Science'
-        #         st.success("** Our analysis says you are looking for Data Science Jobs.**")
+        #         #st.success("** Our analysis says you are looking for Data Science Jobs.**")
         #         recommended_skills = ['Data Visualization', 'Predictive Analysis', 'Statistical Modeling',
         #                                 'Data Mining', 'Clustering & Classification', 'Data Analytics',
         #                                 'Quantitative Analysis', 'Web Scraping', 'ML Algorithms', 'Keras',
@@ -144,7 +175,7 @@ if resume:
         #     elif i.lower() in web_keyword:
         #         print(i.lower())
         #         reco_field = 'Web Development'
-        #         st.success("** Our analysis says you are looking for Web Development Jobs **")
+        #         #st.success("** Our analysis says you are looking for Web Development Jobs **")
         #         recommended_skills = ['React', 'Django', 'Node JS', 'React JS', 'php', 'laravel', 'Magento',
         #                                 'wordpress', 'Javascript', 'Angular JS', 'c#', 'Flask', 'SDK']
         #         recommended_keywords = st_tags(label='### Recommended skills for you.',
@@ -160,7 +191,7 @@ if resume:
         #     elif i.lower() in android_keyword:
         #         print(i.lower())
         #         reco_field = 'Android Development'
-        #         st.success("** Our analysis says you are looking for Android App Development Jobs **")
+        #         #st.success("** Our analysis says you are looking for Android App Development Jobs **")
         #         recommended_skills = ['Android', 'Android development', 'Flutter', 'Kotlin', 'XML', 'Java',
         #                                 'Kivy', 'GIT', 'SDK', 'SQLite']
         #         recommended_keywords = st_tags(label='### Recommended skills for you.',
@@ -176,7 +207,7 @@ if resume:
         #     elif i.lower() in ios_keyword:
         #         print(i.lower())
         #         reco_field = 'IOS Development'
-        #         st.success("** Our analysis says you are looking for IOS App Development Jobs **")
+        #         #st.success("** Our analysis says you are looking for IOS App Development Jobs **")
         #         recommended_skills = ['IOS', 'IOS Development', 'Swift', 'Cocoa', 'Cocoa Touch', 'Xcode',
         #                                 'Objective-C', 'SQLite', 'Plist', 'StoreKit', "UI-Kit", 'AV Foundation',
         #                                 'Auto-Layout']
@@ -193,7 +224,7 @@ if resume:
         #     elif i.lower() in uiux_keyword:
         #         print(i.lower())
         #         reco_field = 'UI-UX Development'
-        #         st.success("** Our analysis says you are looking for UI-UX Development Jobs **")
+        #         #st.success("** Our analysis says you are looking for UI-UX Development Jobs **")
         #         recommended_skills = ['UI', 'User Experience', 'Adobe XD', 'Figma', 'Zeplin', 'Balsamiq',
         #                                 'Prototyping', 'Wireframes', 'Storyframes', 'Adobe Photoshop', 'Editing',
         #                                 'Illustrator', 'After Effects', 'Premier Pro', 'Indesign', 'Wireframe',
@@ -209,8 +240,3 @@ if resume:
 
         
         #st.write(data)
-        doc = fitz.open('resume.pdf')
-        text = ""
-        for page in doc:
-            text+=page.get_text()
-        st.info(f"You are interested in {roles[model.predict(pd.Series([text]))[0]]}")
