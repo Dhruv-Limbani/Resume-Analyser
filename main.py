@@ -7,6 +7,7 @@ import re
 import pickle
 import pandas as pd
 import fitz
+from PIL import Image
 from streamlit_tags import st_tags
 import random
 from courses import ds_course, web_course, android_course, ios_course, uiux_course, resume_videos, interview_videos
@@ -81,8 +82,17 @@ def course_recommender(course_list):
             break
     return rec_course
 
-
+st.set_page_config(
+    page_title = 'Resume Analyser',
+    page_icon='Parsers-Banner.png'
+)
 st.title('Resume Analyser')
+img = Image.open('Parsers-Banner.png')
+left_co, cent_co,last_co = st.columns(3)
+with cent_co:
+    st.image(img)
+
+
 
 resume = st.file_uploader("Upload your resume",type=['pdf'])
 
