@@ -53,10 +53,6 @@ def trans_func(inp):
     inp = inp.apply(lambda x: cleanResume(x))
     return inp.values
 
-with open('model_pipe','rb') as f:
-    model = pickle.load(f)
-df = pd.read_csv("Online_Courses.csv")
-df = df.drop_duplicates(subset=['Title'])
 
 def show_pdf(file_path):
     with open(file_path,"rb") as f:
@@ -71,7 +67,7 @@ def extract_data(file_path):
 
 def course_recommender(role):
     course_list = df[df['Sub-Category']==skills_dict[role][1]][['Title','URL']].values.tolist()
-    st.subheader("**Courses & Certificates🎓 Recommendations**")
+    st.subheader("Courses & Certificates🎓 Recommendations")
     c = 0
     rec_course = []
     no_of_reco = st.slider('Choose Number of Course Recommendations:', 1, 1000, 4)
@@ -85,9 +81,15 @@ def course_recommender(role):
     return rec_course
 
 st.set_page_config(
-    page_title = 'Resume Analyser',
-    page_icon='Parsers-Banner.png'
-)
+        page_title = 'Profile Builder App',
+        page_icon='Parsers-Banner.png'
+    )
+
+with open('model_pipe','rb') as f:
+    model = pickle.load(f)
+df = pd.read_csv("Online_Courses.csv")
+df = df.drop_duplicates(subset=['Title'])
+
 st.title('Resume Analyser')
 img = Image.open('Parsers-Banner.png')
 left_co, cent_co,last_co = st.columns(3)
