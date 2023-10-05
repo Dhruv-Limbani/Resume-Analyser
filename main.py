@@ -55,7 +55,8 @@ def trans_func(inp):
 
 with open('model_pipe','rb') as f:
     model = pickle.load(f)
-
+df = pd.read_csv("Online_Courses.csv")
+df = df.drop_duplicates(subset=['Title'])
 
 def show_pdf(file_path):
     with open(file_path,"rb") as f:
@@ -68,11 +69,12 @@ def extract_data(file_path):
     data = ResumeParser(file_path).get_extracted_data()
     return data
 
-def course_recommender(course_list):
+def course_recommender(role):
+    course_list = df[df['Sub-Category']==skills_dict[role][1]][['Title','URL']].values.tolist()
     st.subheader("**Courses & Certificates🎓 Recommendations**")
     c = 0
     rec_course = []
-    no_of_reco = st.slider('Choose Number of Course Recommendations:', 1, 10, 4)
+    no_of_reco = st.slider('Choose Number of Course Recommendations:', 1, 1000, 4)
     random.shuffle(course_list)
     for c_name, c_link in course_list:
         c += 1
@@ -138,11 +140,12 @@ if resume:
         st.success(f"According to the analysis, you are interested in {role}")
         recommended_keywords = st_tags(label='### Recommended skills for you.',
                                             text='Recommended skills generated from System',
-                                            value=skills_dict[role], key='2')
+                                            value=skills_dict[role][0], key='2')
         st.markdown(
             '''<h4 style='text-align: left; color: #1ed760;'>Adding this skills to resume will boost🚀 the chances of getting a Job💼</h4>''',
             unsafe_allow_html=True)
-        rec_course = course_recommender(ds_course)
+        
+        rec_course = course_recommender(role)
             
         ##  recommendation
         # ds_keyword = ['tensorflow', 'keras', 'pytorch', 'machine learning', 'deep Learning', 'flask',
