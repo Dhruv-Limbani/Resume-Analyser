@@ -12,6 +12,8 @@ from streamlit_tags import st_tags
 import random
 from courses import ds_course, web_course, android_course, ios_course, uiux_course, resume_videos, interview_videos
 from skills import skills_dict
+import time
+
 
 roles = ['Advocate',
  'Arts',
@@ -32,7 +34,7 @@ roles = ['Advocate',
  'Mechanical Engineer',
  'Network Security Engineer',
  'Operations Manager',
- 'PMO',
+ 'PMO (Project Management office)',
  'Python Developer',
  'SAP Developer',
  'Sales',
@@ -67,7 +69,7 @@ def extract_data(file_path):
 
 def course_recommender(role):
     course_list = df[df['Sub-Category']==skills_dict[role][1]][['Title','URL']].values.tolist()
-    st.subheader("Courses & Certificates🎓 Recommendations")
+    st.subheader("Courses & Certificates:mortar_board: Recommendations")
     c = 0
     rec_course = []
     no_of_reco = st.slider('Choose Number of Course Recommendations:', 1, 1000, 4)
@@ -116,19 +118,23 @@ if resume:
         except:
             pass
         cand_level = ''
-        if data['no_of_pages'] == 1:
-            cand_level = "Fresher"
-            st.markdown('''<h4 style='text-align: left; color: #d73b5c;'>You are looking Fresher.</h4>''',
-                        unsafe_allow_html=True)
-        elif data['no_of_pages'] == 2:
-            cand_level = "Intermediate"
-            st.markdown('''<h4 style='text-align: left; color: #1ed760;'>You are at intermediate level!</h4>''',
-                        unsafe_allow_html=True)
-        elif data['no_of_pages'] >= 3:
-            cand_level = "Experienced"
-            st.markdown('''<h4 style='text-align: left; color: #fba171;'>You are at experience level!''',
-                        unsafe_allow_html=True)
-        st.subheader("**Skills Recommendation💡**")
+        if data['total_experience']:
+            if data['total_experience']>5:
+                cand_level = "Fresher"
+            elif data['total_experience']>2:
+                cand_level = "Intermediate"
+            else:
+                cand_level = "Fresher"
+        else:
+            if data['no_of_pages'] == 1:
+                cand_level = "Fresher"
+            elif data['no_of_pages'] == 2:
+                cand_level = "Intermediate"
+            elif data['no_of_pages'] >= 3:
+                cand_level = "Experienced"
+        st.markdown(f'''<h4 style='text-align: left; color: #d73b5c;'>You are looking {cand_level}.</h4>''',
+                            unsafe_allow_html=True)
+        
         ## Skill shows
         keywords = st_tags(label='### Skills that you have',
                             text='See our skills recommendation',
@@ -139,7 +145,8 @@ if resume:
         for page in doc:
             text+=page.get_text()
         role = roles[model.predict(pd.Series([text]))[0]]
-        st.success(f"According to the analysis, you are interested in {role}")
+        st.success(f"According to the analysis, you are interested in {role} jobs")
+        st.subheader("Skills Recommendation:brain:")
         recommended_keywords = st_tags(label='### Recommended skills for you.',
                                             text='Recommended skills generated from System',
                                             value=skills_dict[role][0], key='2')
@@ -147,111 +154,80 @@ if resume:
             '''<h4 style='text-align: left; color: #1ed760;'>Adding this skills to resume will boost🚀 the chances of getting a Job💼</h4>''',
             unsafe_allow_html=True)
         
+        ### Resume writing recommendation
+        st.subheader("Resume Tips & Ideas:bulb:")
+        resume_score = 0
+        if 'Objective' in text:
+            resume_score = resume_score + 20
+            st.markdown(
+                '''<h4 style='text-align: left; color: #1ed760;'>[+] Awesome! You have added Objective</h4>''',
+                unsafe_allow_html=True)
+        else:
+            st.markdown(
+                '''<h4 style='text-align: left; color: #fabc10;'>[-] According to our recommendation please add your career objective, it will give your career intension to the Recruiters.</h4>''',
+                unsafe_allow_html=True)
+
+        if 'Declaration' in text:
+            resume_score = resume_score + 20
+            st.markdown(
+                '''<h4 style='text-align: left; color: #1ed760;'>[+] Awesome! You have added Delcaration✍/h4>''',
+                unsafe_allow_html=True)
+        else:
+            st.markdown(
+                '''<h4 style='text-align: left; color: #fabc10;'>[-] According to our recommendation please add Declaration✍. It will give the assurance that everything written on your resume is true and fully acknowledged by you</h4>''',
+                unsafe_allow_html=True)
+
+        if 'Hobbies' or 'Interests' in text:
+            resume_score = resume_score + 20
+            st.markdown(
+                '''<h4 style='text-align: left; color: #1ed760;'>[+] Awesome! You have added your Hobbies⚽</h4>''',
+                unsafe_allow_html=True)
+        else:
+            st.markdown(
+                '''<h4 style='text-align: left; color: #fabc10;'>[-] According to our recommendation please add Hobbies⚽. It will show your persnality to the Recruiters and give the assurance that you are fit for this role or not.</h4>''',
+                unsafe_allow_html=True)
+
+        if 'Achievements' in text:
+            resume_score = resume_score + 20
+            st.markdown(
+                '''<h4 style='text-align: left; color: #1ed760;'>[+] Awesome! You have added your Achievements🏅 </h4>''',
+                unsafe_allow_html=True)
+        else:
+            st.markdown(
+                '''<h4 style='text-align: left; color: #fabc10;'>[-] According to our recommendation please add Achievements🏅. It will show that you are capable for the required position.</h4>''',
+                unsafe_allow_html=True)
+
+        if 'Projects' in text:
+            resume_score = resume_score + 20
+            st.markdown(
+                '''<h4 style='text-align: left; color: #1ed760;'>[+] Awesome! You have added your Projects👨‍💻 </h4>''',
+                unsafe_allow_html=True)
+        else:
+            st.markdown(
+                '''<h4 style='text-align: left; color: #fabc10;'>[-] According to our recommendation please add Projects👨‍💻. It will show that you have done work related the required position or not.</h4>''',
+                unsafe_allow_html=True)
+
+        st.subheader("Resume Score:memo:")
+        st.markdown(
+            """
+            <style>
+                .stProgress > div > div > div > div {
+                    background-color: #d73b5c;
+                }
+            </style>""",
+            unsafe_allow_html=True,
+        )
+        my_bar = st.progress(0)
+        score = 0
+        for percent_complete in range(resume_score):
+            score += 1
+            time.sleep(0.1)
+            my_bar.progress(percent_complete + 1)
+        st.success('Your Resume Writing Score: ' + str(score))
+        st.warning(
+            "Note: This score is calculated based on the content that you have added in your Resume")
+        st.balloons()
+
+
+
         rec_course = course_recommender(role)
-            
-        ##  recommendation
-        # ds_keyword = ['tensorflow', 'keras', 'pytorch', 'machine learning', 'deep Learning', 'flask',
-        #                 'streamlit']
-        # web_keyword = ['react', 'django', 'node jS', 'react js', 'php', 'laravel', 'magento', 'wordpress',
-        #                 'javascript', 'angular js', 'c#', 'flask']
-        # android_keyword = ['android', 'android development', 'flutter', 'kotlin', 'xml', 'kivy']
-        # ios_keyword = ['ios', 'ios development', 'swift', 'cocoa', 'cocoa touch', 'xcode']
-        # uiux_keyword = ['ux', 'adobe xd', 'figma', 'zeplin', 'balsamiq', 'ui', 'prototyping', 'wireframes',
-        #                 'storyframes', 'adobe photoshop', 'photoshop', 'editing', 'adobe illustrator',
-        #                 'illustrator', 'adobe after effects', 'after effects', 'adobe premier pro',
-        #                 'premier pro', 'adobe indesign', 'indesign', 'wireframe', 'solid', 'grasp',
-        #                 'user research', 'user experience']
-        
-        # recommended_skills = []
-        # reco_field = ''
-        # rec_course = ''
-        ## Courses recommendation
-        # for i in data['skills']:
-        #     ## Data science recommendation
-        #     if i.lower() in ds_keyword:
-        #         print(i.lower())
-        #         reco_field = 'Data Science'
-        #         #st.success("** Our analysis says you are looking for Data Science Jobs.**")
-        #         recommended_skills = ['Data Visualization', 'Predictive Analysis', 'Statistical Modeling',
-        #                                 'Data Mining', 'Clustering & Classification', 'Data Analytics',
-        #                                 'Quantitative Analysis', 'Web Scraping', 'ML Algorithms', 'Keras',
-        #                                 'Pytorch', 'Probability', 'Scikit-learn', 'Tensorflow', "Flask",
-        #                                 'Streamlit']
-        #         recommended_keywords = st_tags(label='### Recommended skills for you.',
-        #                                         text='Recommended skills generated from System',
-        #                                         value=recommended_skills, key='2')
-        #         st.markdown(
-        #             '''<h4 style='text-align: left; color: #1ed760;'>Adding this skills to resume will boost🚀 the chances of getting a Job💼</h4>''',
-        #             unsafe_allow_html=True)
-        #         rec_course = course_recommender(ds_course)
-        #         break
-
-        #     ## Web development recommendation
-        #     elif i.lower() in web_keyword:
-        #         print(i.lower())
-        #         reco_field = 'Web Development'
-        #         #st.success("** Our analysis says you are looking for Web Development Jobs **")
-        #         recommended_skills = ['React', 'Django', 'Node JS', 'React JS', 'php', 'laravel', 'Magento',
-        #                                 'wordpress', 'Javascript', 'Angular JS', 'c#', 'Flask', 'SDK']
-        #         recommended_keywords = st_tags(label='### Recommended skills for you.',
-        #                                         text='Recommended skills generated from System',
-        #                                         value=recommended_skills, key='3')
-        #         st.markdown(
-        #             '''<h4 style='text-align: left; color: #1ed760;'>Adding this skills to resume will boost🚀 the chances of getting a Job💼</h4>''',
-        #             unsafe_allow_html=True)
-        #         rec_course = course_recommender(web_course)
-        #         break
-
-        #     ## Android App Development
-        #     elif i.lower() in android_keyword:
-        #         print(i.lower())
-        #         reco_field = 'Android Development'
-        #         #st.success("** Our analysis says you are looking for Android App Development Jobs **")
-        #         recommended_skills = ['Android', 'Android development', 'Flutter', 'Kotlin', 'XML', 'Java',
-        #                                 'Kivy', 'GIT', 'SDK', 'SQLite']
-        #         recommended_keywords = st_tags(label='### Recommended skills for you.',
-        #                                         text='Recommended skills generated from System',
-        #                                         value=recommended_skills, key='4')
-        #         st.markdown(
-        #             '''<h4 style='text-align: left; color: #1ed760;'>Adding this skills to resume will boost🚀 the chances of getting a Job💼</h4>''',
-        #             unsafe_allow_html=True)
-        #         rec_course = course_recommender(android_course)
-        #         break
-
-        #     ## IOS App Development
-        #     elif i.lower() in ios_keyword:
-        #         print(i.lower())
-        #         reco_field = 'IOS Development'
-        #         #st.success("** Our analysis says you are looking for IOS App Development Jobs **")
-        #         recommended_skills = ['IOS', 'IOS Development', 'Swift', 'Cocoa', 'Cocoa Touch', 'Xcode',
-        #                                 'Objective-C', 'SQLite', 'Plist', 'StoreKit', "UI-Kit", 'AV Foundation',
-        #                                 'Auto-Layout']
-        #         recommended_keywords = st_tags(label='### Recommended skills for you.',
-        #                                         text='Recommended skills generated from System',
-        #                                         value=recommended_skills, key='5')
-        #         st.markdown(
-        #             '''<h4 style='text-align: left; color: #1ed760;'>Adding this skills to resume will boost🚀 the chances of getting a Job💼</h4>''',
-        #             unsafe_allow_html=True)
-        #         rec_course = course_recommender(ios_course)
-        #         break
-
-        #     ## Ui-UX Recommendation
-        #     elif i.lower() in uiux_keyword:
-        #         print(i.lower())
-        #         reco_field = 'UI-UX Development'
-        #         #st.success("** Our analysis says you are looking for UI-UX Development Jobs **")
-        #         recommended_skills = ['UI', 'User Experience', 'Adobe XD', 'Figma', 'Zeplin', 'Balsamiq',
-        #                                 'Prototyping', 'Wireframes', 'Storyframes', 'Adobe Photoshop', 'Editing',
-        #                                 'Illustrator', 'After Effects', 'Premier Pro', 'Indesign', 'Wireframe',
-        #                                 'Solid', 'Grasp', 'User Research']
-        #         recommended_keywords = st_tags(label='### Recommended skills for you.',
-        #                                         text='Recommended skills generated from System',
-        #                                         value=recommended_skills, key='6')
-        #         st.markdown(
-        #             '''<h4 style='text-align: left; color: #1ed760;'>Adding this skills to resume will boost🚀 the chances of getting a Job💼</h4>''',
-        #             unsafe_allow_html=True)
-        #         rec_course = course_recommender(uiux_course)
-        #         break
-
-        
-        #st.write(data)

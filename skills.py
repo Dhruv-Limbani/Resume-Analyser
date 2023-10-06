@@ -370,7 +370,7 @@ skills_dict = {
     'Mechanical Engineer': [mechanical_engineer_skills,'Mechanical Engineering'],
     'Network Security Engineer': [network_security_engineer_skills,'Security'],
     'Operations Manager': [operations_manager_skills,'Design and Product'],
-    'PMO': [pmo_skills,'Design and Product'],
+    'PMO (Project Management office)': [pmo_skills,'Design and Product'],
     'Python Developer': [python_developer_skills,'Machine Learning'],
     'SAP Developer': [sap_developer_skills,'Business Essentials'],
     'Sales': [sales_skills,'Marketing'],
