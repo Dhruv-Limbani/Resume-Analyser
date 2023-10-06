@@ -72,7 +72,7 @@ def course_recommender(role):
     st.subheader("Courses & Certificates:mortar_board: Recommendations")
     c = 0
     rec_course = []
-    no_of_reco = st.slider('Choose Number of Course Recommendations:', 1, 1000, 4)
+    no_of_reco = st.select_slider('Choose Number of Course Recommendations:', options=[i+1 for i in range(100)])
     random.shuffle(course_list)
     for c_name, c_link in course_list:
         c += 1
@@ -91,7 +91,7 @@ with open('model_pipe','rb') as f:
     model = pickle.load(f)
 df = pd.read_csv("Online_Courses.csv")
 df = df.drop_duplicates(subset=['Title'])
-
+course_list = df['Title'].values.tolist()
 st.title('Resume Analyser')
 img = Image.open('Parsers-Banner.png')
 left_co, cent_co,last_co = st.columns(3)
@@ -221,7 +221,7 @@ if resume:
         score = 0
         for percent_complete in range(resume_score):
             score += 1
-            time.sleep(0.1)
+            time.sleep(0.01)
             my_bar.progress(percent_complete + 1)
         st.success('Your Resume Writing Score: ' + str(score))
         st.warning(
@@ -231,3 +231,21 @@ if resume:
 
 
         rec_course = course_recommender(role)
+        st.subheader("Search for other courses:bulb:")
+        course = st.selectbox(label = 'Popular Online Courses',options = course_list)
+        details = df[df['Title']==course][['URL','Short Intro','Language','Skills']].values.tolist()
+        st.subheader("Course Details")
+        #st.dataframe(details.T)
+        if str(details[0][1]) != 'nan':
+            st.success("Course Intro")
+            st.markdown(
+                    f'''<h4 style='text-align: left; color: #fabc10;'> {details[0][1]} </h4>''',
+                    unsafe_allow_html=True)
+        if str(details[0][2]) != 'nan':
+            st.success(f"Mode of Instructions: {details[0][2]}")
+        if str(details[0][3]) != 'nan':
+            list_sk = details[0][3].split(",")
+            list_sk2 = st_tags(label='Skills that you will learn',text='skills from course',
+                           value=list_sk, key='3')
+        
+        st.markdown(f"Course Link: {details[0][0]}")
