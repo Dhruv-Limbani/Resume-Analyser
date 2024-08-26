@@ -6,4 +6,4 @@ spacy==2.3.5
 https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz
 scikit-learn==1.2.2
 streamlit==1.12.2
-nltk
+nltk==2.6.3
