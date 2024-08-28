@@ -102,10 +102,10 @@ with cent_co:
 
 resume = st.file_uploader("Upload your resume",type=['pdf'])
 
-# if resume:
-#     with open('resume.pdf','wb') as f:
-#         f.write(resume.getbuffer())
-#         show_pdf("resume.pdf")
+if resume:
+    with open('resume.pdf','wb') as f:
+        f.write(resume.getbuffer())
+        show_pdf("resume.pdf")
 #     data = extract_data("resume.pdf")
 #     if data:
 #         st.success("Hello " + data['name'])
