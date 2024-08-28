@@ -1,4 +1,4 @@
-scikit-learn==1.5.1
+scikit-learn==1.2.2
 spacy==2.3.5
 pyresparser
 https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz
