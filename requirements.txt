@@ -31,7 +31,6 @@ colorama==0.4.4
 coloredlogs==15.0.1
 commonmark==0.9.1
 comtypes==1.1.14
-confection==0.0.3
 conllu==4.5.2
 convertdate==2.4.0
 cryptography==37.0.4
@@ -212,7 +211,7 @@ sniffio==1.2.0
 sortedcontainers==2.4.0
 soupsieve==2.3.2.post1
 spacepy==0.4.1
-spacy==2.3.9
+spacy==2.3.5
 spacy-legacy==3.0.12
 spacy-loggers==1.0.3
 stack-data==0.2.0
