@@ -112,7 +112,6 @@ mpmath==1.2.1
 multidict==6.0.4
 multitasking==0.0.11
 murmurhash==1.0.9
-mysql-connector-python==8.0.32
 nbclient==0.6.4
 nbconvert==6.5.0
 nbformat==5.4.0
@@ -149,7 +148,6 @@ preshed==3.0.8
 prometheus-client==0.14.1
 prompt-toolkit==3.0.29
 prophet==1.1.4
-protobuf==4.25.3
 psutil==5.9.1
 pure-eval==0.2.2
 pyarrow==9.0.0
