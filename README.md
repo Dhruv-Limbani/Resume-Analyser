@@ -1,4 +1,4 @@
-A web app for resume analysis
+A web app for resume analysis - https://profile-builder.streamlit.app/
 
 -----------------------------------------------------------------------------------------------------------------
 Date: 28th August, 2024
