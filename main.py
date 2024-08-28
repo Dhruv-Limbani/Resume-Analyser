@@ -1,6 +1,6 @@
 import streamlit as st
-# import nltk
-# nltk.download('stopwords')
+import nltk
+nltk.download('stopwords')
 import base64
 from pyresparser import ResumeParser
 import re
