@@ -2,7 +2,7 @@ import streamlit as st
 # import nltk
 # nltk.download('stopwords')
 import base64
-# from pyresparser import ResumeParser
+from pyresparser import ResumeParser
 import re
 import pickle
 import pandas as pd
@@ -106,7 +106,7 @@ if resume:
     with open('resume.pdf','wb') as f:
         f.write(resume.getbuffer())
         show_pdf("resume.pdf")
-#     data = extract_data("resume.pdf")
+    data = extract_data("resume.pdf")
 #     if data:
 #         st.success("Hello " + data['name'])
 #         st.subheader("Your Basic Info")
