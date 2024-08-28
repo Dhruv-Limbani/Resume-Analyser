@@ -230,7 +230,6 @@ spacepy==0.4.1
 spacy==2.3.9
 spacy-legacy==3.0.12
 spacy-loggers==1.0.3
-srsly==1.0.6
 stack-data==0.2.0
 starlette==0.21.0
 streamlit==1.37.1
