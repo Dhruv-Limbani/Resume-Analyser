@@ -226,9 +226,6 @@ if resume:
         st.success('Your Resume Writing Score: ' + str(score))
         st.warning(
             "Note: This score is calculated based on the content that you have added in your Resume")
-        st.balloons()
-
-
 
         rec_course = course_recommender(role)
         st.subheader("Search for other courses:bulb:")
